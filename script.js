@@ -38,5 +38,17 @@ gameboardModule.logBoard();
 //Player factory
 function createPlayer(name, order) {
 
+    //Order: is it player 1 or player 2? 
+    //gameFlow.whoseTurn returns the opposite of the current player
+
     return { name, order }
 }
+
+//Game order
+const gameFlow = (function () {
+
+    function whoseTurn(current_player) {
+        return 3 - current_player;
+    }
+
+})();
