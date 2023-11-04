@@ -24,16 +24,27 @@ let gameboardModule = (function (){
     function logBoard() {
         console.log(gameboard)
     }
+    
+    //
+    function updateBoard(coordinateX, coordinateY, move) {
 
-    makeBoard();
+        //TODO: Rethink this part as it only changes one part of the cell??
+        //TODO: maybe assign each cell (array) with a unique id,
+        //TODO: that corresponds to magic square, so checking for win condition is easy (just check the sum of the array = 15)
 
-    return {gameboard, makeBoard, logBoard}
+        this.gameboard[coordinateX][coordinateY] = move;
+
+        return {gameboard};
+    }
+
+    return {gameboard, makeBoard, logBoard, updateBoard}
     
 })();
 
 //Using IIFE module here is good because gameboardModule is the only variable in the global namespace
 //height and width are private properties but can be changed with setDimensions(h,w)
-gameboardModule.logBoard();
+gameboardModule.makeBoard(); //Makes the gameboard
+gameboardModule.logBoard(); //Logs the gameboard to the console
 
 //Player factory
 function createPlayer(name, order) {
@@ -48,7 +59,20 @@ function createPlayer(name, order) {
 const gameFlow = (function () {
 
     function whoseTurn(current_player) {
+        //gameFlow.whoseTurn returns the opposite of the current player
         return 3 - current_player;
     }
 
+    function promptPlayer(player) {
+        let current_player = player;
+        let move = prompt(`${player}'s move`);
+        return {move, current_player};
+    }
+
 })();
+
+//Trying out the game in console
+
+//1. Create players
+let player1 = createPlayer("Player 1", 1);
+let player2 = createPlayer("Player 2", 2);
