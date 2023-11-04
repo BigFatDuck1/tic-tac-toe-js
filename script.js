@@ -1,23 +1,24 @@
 
 //Make gameboard
-let makeGameboard = {
-    gameboard: [],
+let makeGameboard = (function (){
+    let gameboard = [];
 
-    height: 3,
-    width: 3,
+    let height = 3;
+    let width = 3;
 
-    makeBoard: function() {
-        //Make rows
-        for (let i = 0; i < this.width; i++) {
-            for (let j = 0; j < this.height; j++) {
-                //Make columns
-                this.gameboard.push([i,j]); //Coordinates
-            }            
+    function makeBoard() {
+        for (let h = 0; h < height; h++) {
+            for (let w = 0; w < width; w++) {
+                gameboard.push([w, h]); //Coordinates
+            }
         }
-        return this.gameboard;
-    },
-    
-};
+            
+    }
 
-makeGameboard.makeBoard();
+    makeBoard();
+
+    return {gameboard}
+    
+})();
+
 console.log(makeGameboard.gameboard);
