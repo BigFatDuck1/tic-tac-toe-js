@@ -1,6 +1,6 @@
 
 //Make gameboard
-let makeGameboard = (function (){
+let gameboardModule = (function (){
     let gameboard = [];
 
     let height = 3;
@@ -15,10 +15,14 @@ let makeGameboard = (function (){
             
     }
 
+    function logBoard() {
+        console.log(gameboard)
+    }
+
     makeBoard();
 
-    return {gameboard}
+    return {gameboard, makeBoard, logBoard}
     
 })();
 
-console.log(makeGameboard.gameboard);
+gameboardModule.logBoard();
