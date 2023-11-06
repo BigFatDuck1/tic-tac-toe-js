@@ -1,6 +1,7 @@
 
 //Make gameboard
-let gameboardModule = (function (){
+let gameboardModule = (function() {
+
     let gameboard = [];
 
     let height = 3;
@@ -18,8 +19,7 @@ let gameboardModule = (function (){
                 gameboard.push([""]); //Empty string to fill with move later (X or O)
             }
         }
-        return gameboard;
-            
+        return gameboard;        
     }
 
     function appendThirdOrderSquare(board) {
@@ -29,13 +29,23 @@ let gameboardModule = (function (){
         }
         return board;
     }
+    
+    //
+    function updateBoard(square, move) {
+
+        this.gameboard[square][0] = move;
+
+        console.log(this.gameboard);
+        
+        return {gameboard};
+    }
 
     function logBoard() {
         console.log(gameboard);
     }
 
 
-    return {gameboard, makeBoard, logBoard, appendThirdOrderSquare, setDimensions}
+    return {gameboard, makeBoard, logBoard, appendThirdOrderSquare, setDimensions, updateBoard}
     
 })();
 
@@ -44,9 +54,35 @@ let gameboardModule = (function (){
 gameboardModule.makeBoard();
 gameboardModule.appendThirdOrderSquare(gameboardModule.gameboard);
 gameboardModule.logBoard();
+gameboardModule.updateBoard(1, "X");
 
 //Player factory
 function createPlayer(name, order) {
 
+    //Order: is it player 1 or player 2? 
+    //gameFlow.whoseTurn returns the opposite of the current player
+
     return { name, order }
 }
+
+//Game order
+const gameFlow = (function () {
+
+    function whoseTurn(current_player) {
+        //gameFlow.whoseTurn returns the opposite of the current player
+        return 3 - current_player;
+    }
+
+    function promptPlayer(player) {
+        let current_player = player;
+        let move = prompt(`${player}'s move`);
+        return {move, current_player};
+    }
+
+})();
+
+//Trying out the game in console
+
+//1. Create players
+let player1 = createPlayer("Player 1", 1);
+let player2 = createPlayer("Player 2", 2);
