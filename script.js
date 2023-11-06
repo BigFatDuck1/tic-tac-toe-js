@@ -44,8 +44,55 @@ let gameboardModule = (function() {
         console.log(gameboard);
     }
 
+    function checkWin(side) { //Check for X or O?
+        //Whenever a move has been made, call this function
+        //Collects all non-empty squares into a new array
+        let filled_squares = [];
+        let i = 0;
+        let purge_these = [];
 
-    return {gameboard, makeBoard, logBoard, appendThirdOrderSquare, setDimensions, updateBoard}
+        this.gameboard.forEach((element) => {
+
+            if (element[0] == side) {
+                filled_squares.push(element);
+                //TODO: clear this after done debugging
+                console.log(filled_squares);
+                console.log(i);
+
+                purge_these.push(i);
+            }
+            i++;
+        });
+
+        //If there are less than three squares, return false
+        if (filled_squares.length < 3) {
+            return false;
+        }
+
+        //If there are three squares, check if they are in a row
+        let running_total = 0;
+        filled_squares.forEach((element) => {
+            running_total += element[1];
+        })
+
+        if (running_total == 15) {
+            return true; //Won
+        }
+        else {
+            let result = false;
+            return {result, purge_these}; //Didn't win
+        }
+    }
+
+    function purgeIndices(array) {
+        for (let element of array) {
+            this.gameboard[element][1] = 0;
+            //TODO: clear after debug
+            console.log(this.gameboard);
+        }
+    }
+
+    return {gameboard, makeBoard, logBoard, appendThirdOrderSquare, setDimensions, updateBoard, checkWin, purgeIndices}
     
 })();
 
@@ -54,7 +101,12 @@ let gameboardModule = (function() {
 gameboardModule.makeBoard();
 gameboardModule.appendThirdOrderSquare(gameboardModule.gameboard);
 gameboardModule.logBoard();
+//!Test
 gameboardModule.updateBoard(1, "X");
+gameboardModule.updateBoard(5, "X");
+gameboardModule.updateBoard(7, "X");
+let result = gameboardModule.checkWin("X"); //Lose
+gameboardModule.purgeIndices(result.purge_these);
 
 //Player factory
 function createPlayer(name, order) {
