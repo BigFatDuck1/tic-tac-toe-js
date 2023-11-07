@@ -150,8 +150,9 @@ function oneRound() {
     gameboardModule.updateBoard(move.move, side, gameboard);
     let result = gameboardModule.checkWin(side, gameboard);
     console.log(result);
-    if (result === "false") {
-        gameboardModule.purgeIndices(result.purge_these);
+    if (result.result == false) {
+        gameboardModule.purgeIndices(result.purge_these, gameboard);
+        console.log("Purge")
         current_player = gameFlow.nextTurn(current_player);
         state = "Neutral";
         oneRound();
@@ -159,7 +160,8 @@ function oneRound() {
     }
     else {
         // console.log(`Player ${current_player} wins`);
-        state = "Win"
+        state = "Win";
+        console.log(state);
         return state;
     }
 }
