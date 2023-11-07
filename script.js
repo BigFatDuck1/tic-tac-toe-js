@@ -149,6 +149,7 @@ function oneRound() {
     let side = current_player == 1 ? "O" : "X";
     gameboardModule.updateBoard(move.move, side, gameboard);
     let result = gameboardModule.checkWin(side, gameboard);
+    console.log(result);
     if (result === "false") {
         gameboardModule.purgeIndices(result.purge_these);
         current_player = gameFlow.nextTurn(current_player);
