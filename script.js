@@ -41,47 +41,45 @@ let gameboardModule = (function() {
         console.log(board);
     }
 
-    function checkWin(side, board) { //Check for X or O?
+    function checkWin(board) { //Check for X or O?
         //Whenever a move has been made, call this function
-        //Collects all non-empty squares into a new array
-        let filled_squares = [];
-        let i = 0;
-        let purge_these = [];
+        let row1 = [board[0], board[1], board[2]];
+        let row2 = [board[3], board[4], board[5]];
+        let row3 = [board[6], board[7], board[8]];
+        let column1 = [board[0], board[3], board[6]];
+        let column2 = [board[1], board[4], board[7]];
+        let column3 = [board[2], board[5], board[8]];
+        let diagonal1 = [board[0], board[4], board[8]];
+        let diagonal2 = [board[2], board[4], board[6]];
 
-        board.forEach((element) => {
+        function checkSquares(set) {
+            //Set is the array containing the squares in the row/column/diagonal
+            let sum = 0;
+            set.forEach(element => {
+                if (element[0] == "O" || element[0] == "X") {
+                    sum += element[1];
+                }
+            });
 
-            if (element[0] == side) {
-                filled_squares.push(element);
-                purge_these.push(i);
+            //If win detected
+            if (sum == 15) {
+                return {result: true, winning_side: set[0][0]}
             }
-            i++;
-        });
-
-        //If there are less than three squares, return false
-        if (filled_squares.length < 3) {
-            return {result: false, purge_these};
+            else if (sum != 15) {
+                return {result: false}
+            }
         }
 
-        //If there are three squares, check if they are in a row
-        let running_total = 0;
-        filled_squares.forEach((element) => {
-            running_total += element[1];
+        let check_these = [row1, row2, row3, column1, column2, column3, diagonal1, diagonal2];
+        let result;
+        check_these.forEach(element => {
+            result = checkSquares(element);
+            if (result.result == true) {
+                return result;
+            }
         })
 
-        if (running_total == 15) {
-            return true; //Won
-        }
-        else {
-            let result = false;
-            return {result, purge_these}; //Didn't win
-        }
-    }
-
-    //Set moves that have been done to =0, effectively clearing that square
-    function purgeIndices(array, board) {
-        for (let element of array) {
-            board[element][1] = 0;
-        }
+        return result; //No winner
     }
 
     return {
@@ -91,7 +89,7 @@ let gameboardModule = (function() {
             setDimensions, 
             updateBoard, 
             checkWin, 
-            purgeIndices,}
+            }
     
 })();
 
@@ -107,6 +105,8 @@ function createPlayer(name, order) {
 //Game order
 const gameFlow = (function () {
 
+    let nth_turn = 0;
+
     function nextTurn(current_player) {
         //gameFlow.whoseTurn returns the opposite of the current player
         return 3 - current_player;
@@ -118,7 +118,7 @@ const gameFlow = (function () {
         return {move, current_player};
     }
 
-    return {nextTurn, promptPlayer}
+    return {nextTurn, promptPlayer, nth_turn}
 
 })();
 
@@ -148,21 +148,24 @@ function oneRound() {
     let move = gameFlow.promptPlayer(current_player); //Input must be in the form of a "coordinate" for a square i.e. 0-8
     let side = current_player == 1 ? "O" : "X";
     gameboardModule.updateBoard(move.move, side, gameboard);
-    let result = gameboardModule.checkWin(side, gameboard);
+    gameFlow.nth_turn++; //Increment turn
+    let result = gameboardModule.checkWin(gameboard);
     console.log(result);
     if (result.result == false) {
-        gameboardModule.purgeIndices(result.purge_these, gameboard);
-        console.log("Purge")
-        current_player = gameFlow.nextTurn(current_player);
-        state = "Neutral";
-        oneRound();
-
+        if (gameFlow.nth_turn < 9) {
+            current_player = gameFlow.nextTurn(current_player);
+            console.log(gameboard);
+            oneRound();
+            //? Debug
+        }
+        else if (gameFlow.nth_turn == 9) {
+            state = "Draw";
+            console.log(state);
+        }
     }
-    else {
-        // console.log(`Player ${current_player} wins`);
-        state = "Win";
-        console.log(state);
-        return state;
+    else if (result.result == true) {
+        console.log(`Winner: ${result.winning_side}`);
+        return result;
     }
 }
 
