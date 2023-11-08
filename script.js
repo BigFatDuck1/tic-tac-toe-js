@@ -52,34 +52,35 @@ let gameboardModule = (function() {
         let diagonal1 = [board[0], board[4], board[8]];
         let diagonal2 = [board[2], board[4], board[6]];
 
+        let winner = {
+            result: false,
+            winner: "",
+        }
+
         function checkSquares(set) {
             //Set is the array containing the squares in the row/column/diagonal
             let sum = 0;
             set.forEach(element => {
                 if (element[0] == "O" || element[0] == "X") {
+                    console.log(sum);
                     sum += element[1];
                 }
             });
 
             //If win detected
             if (sum == 15) {
-                return {result: true, winning_side: set[0][0]}
-            }
-            else if (sum != 15) {
-                return {result: false}
+                winner.result = true;
+                winner.winner = set[0][0];
             }
         }
 
         let check_these = [row1, row2, row3, column1, column2, column3, diagonal1, diagonal2];
-        let result;
         check_these.forEach(element => {
-            result = checkSquares(element);
-            if (result.result == true) {
-                return result;
-            }
+            console.log(element);
+            checkSquares(element);
         })
 
-        return result; //No winner
+        return winner; //No winner
     }
 
     return {
@@ -169,13 +170,14 @@ function oneRound() {
     }
 }
 
-state = oneRound();
+// state = oneRound();
 
 
 //!Test (debug)
-// gameboardModule.updateBoard(1, "X");
-// gameboardModule.updateBoard(5, "X");
-// gameboardModule.updateBoard(7, "X");
+gameboardModule.updateBoard(1, "X", gameboard);
+gameboardModule.updateBoard(4, "X", gameboard);
+gameboardModule.updateBoard(7, "X", gameboard);
+console.log(gameboardModule.checkWin(gameboard));
 // let result = gameboardModule.checkWin("X"); => lose
 //Only purge if lose
 // if (result == "false") {
