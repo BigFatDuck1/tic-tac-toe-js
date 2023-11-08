@@ -52,25 +52,40 @@ let gameboardModule = (function() {
         let diagonal1 = [board[0], board[4], board[8]];
         let diagonal2 = [board[2], board[4], board[6]];
 
-        let winner = {
+        let winner = { //Default state is lose i.e. no winner
             result: false,
             winner: "",
         }
 
         function checkSquares(set) {
             //Set is the array containing the squares in the row/column/diagonal
+            //e.g. [board[0], board[1], board[2]
             let sum = 0;
+            let characters = [];
             set.forEach(element => {
                 if (element[0] == "O" || element[0] == "X") {
                     sum += element[1];
+                    characters.push(element[0]);
                 }
             });
 
+            //Arrays can't be compared with == since they are a type of objects
+            //["O", "O", "O"] == ["O", "O", "O"] returns false
+            characters = characters.toString(); 
+            
+
             //If win detected
-            if (sum == 15) {
+            if (sum == 15 && (characters == "O,O,O" || characters == "X,X,X")) {
+                //Only update if there is a winner
                 winner.result = true;
                 winner.winner = set[0][0];
+                
+                console.log("Winner detected");
+
+                return winner;
+                
             }
+            
         }
 
         let check_these = [row1, row2, row3, column1, column2, column3, diagonal1, diagonal2];
