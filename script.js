@@ -32,6 +32,11 @@ let gameboardModule = (function() {
     
     function updateBoard(square, move, board) {
 
+        if (board[square][0] != "") {
+            //There is already a move there, return error
+            return "error";
+        }
+
         board[square][0] = move;
         
         return {board};
@@ -79,8 +84,6 @@ let gameboardModule = (function() {
                 //Only update if there is a winner
                 winner.result = true;
                 winner.winner = set[0][0];
-                
-                console.log("Winner detected");
 
                 return winner;
                 
@@ -161,11 +164,14 @@ let current_player = 1; //Start with Player 1 which is O;
 function oneRound() {
     let move = gameFlow.promptPlayer(current_player); //Input must be in the form of a "coordinate" for a square i.e. 0-8
     let side = current_player == 1 ? "O" : "X";
-    gameboardModule.updateBoard(move.move, side, gameboard);
+    let valid_move = gameboardModule.updateBoard(move.move, side, gameboard);
+    if (valid_move == "error") {
+        console.log("Invalid move");
+        oneRound();
+    }
+
     gameFlow.nth_turn++; //Increment turn
     let result = gameboardModule.checkWin(gameboard);
-    console.log(gameboard);
-    console.log(result);
     if (result.result == false) {
         if (gameFlow.nth_turn < 9) {
             current_player = gameFlow.nextTurn(current_player);
