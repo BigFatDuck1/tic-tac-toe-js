@@ -62,7 +62,6 @@ let gameboardModule = (function() {
             let sum = 0;
             set.forEach(element => {
                 if (element[0] == "O" || element[0] == "X") {
-                    console.log(sum);
                     sum += element[1];
                 }
             });
@@ -76,7 +75,6 @@ let gameboardModule = (function() {
 
         let check_these = [row1, row2, row3, column1, column2, column3, diagonal1, diagonal2];
         check_these.forEach(element => {
-            console.log(element);
             checkSquares(element);
         })
 
@@ -142,7 +140,7 @@ let gameboard;
 
 //3. Function for one round with checking for win condition
 let state = "Neutral" //Win, Neutral, Draw
-let current_player = 1; //Start with Player 1
+let current_player = 1; //Start with Player 1 which is O;
 
 
 function oneRound() {
@@ -151,13 +149,12 @@ function oneRound() {
     gameboardModule.updateBoard(move.move, side, gameboard);
     gameFlow.nth_turn++; //Increment turn
     let result = gameboardModule.checkWin(gameboard);
+    console.log(gameboard);
     console.log(result);
     if (result.result == false) {
         if (gameFlow.nth_turn < 9) {
             current_player = gameFlow.nextTurn(current_player);
-            console.log(gameboard);
             oneRound();
-            //? Debug
         }
         else if (gameFlow.nth_turn == 9) {
             state = "Draw";
@@ -165,21 +162,16 @@ function oneRound() {
         }
     }
     else if (result.result == true) {
-        console.log(`Winner: ${result.winning_side}`);
+        console.log(`Winner: ${result.winner}`);
         return result;
     }
 }
 
-// state = oneRound();
+state = oneRound();
 
 
 //!Test (debug)
-gameboardModule.updateBoard(1, "X", gameboard);
-gameboardModule.updateBoard(4, "X", gameboard);
-gameboardModule.updateBoard(7, "X", gameboard);
-console.log(gameboardModule.checkWin(gameboard));
-// let result = gameboardModule.checkWin("X"); => lose
-//Only purge if lose
-// if (result == "false") {
-//     gameboardModule.purgeIndices(result.purge_these);
-// }
+// gameboardModule.updateBoard(1, "X", gameboard);
+// gameboardModule.updateBoard(4, "X", gameboard);
+// gameboardModule.updateBoard(7, "X", gameboard);
+// console.log(gameboardModule.checkWin(gameboard));
