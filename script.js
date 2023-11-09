@@ -173,13 +173,15 @@ function oneRound() {
     gameFlow.nth_turn++; //Increment turn
     let result = gameboardModule.checkWin(gameboard);
     if (result.result == false) {
-        if (gameFlow.nth_turn < 9) {
+        if (gameFlow.nth_turn < 9) { //Continue game if no winner and less than 9 turns
             current_player = gameFlow.nextTurn(current_player);
             oneRound();
         }
-        else if (gameFlow.nth_turn == 9) {
+        else if (gameFlow.nth_turn == 9) { //Draw
             state = "Draw";
-            console.log(state);
+            result.winner = state;
+            console.log(winner);
+            return winner;
         }
     }
     else if (result.result == true) {
