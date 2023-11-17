@@ -161,8 +161,40 @@ let state = "Neutral" //Win, Neutral, Draw
 let current_player = 1; //Start with Player 1 which is O;
 
 
+const DOMHandling = (
+    function() {
+
+        
+        function clearBoard() {
+            let tiles = document.querySelectorAll(".tile");
+            tiles.forEach((element) => {
+                element.textContent = "";
+            })
+        }
+
+        //This function takes a click from the player and returns the coordinate that was clicked
+        function clickMove() {
+            let tiles = document.querySelectorAll(".tile");
+
+            tiles.forEach((element) => {
+                element.addEventListener("click", function() {
+                    
+                    let coordinate = element.dataset.coord;
+                    return coordinate;
+                })
+            })
+        }
+
+        return { clearBoard, clickMove }
+    }
+
+)();
+
 function oneRound() {
-    let move = gameFlow.promptPlayer(current_player); //Input must be in the form of a "coordinate" for a square i.e. 0-8
+    
+    //Input must be in the form of a "coordinate" for a square i.e. 0-8
+    let move = gameFlow.promptPlayer(current_player); 
+
     let side = current_player == 1 ? "O" : "X";
     let valid_move = gameboardModule.updateBoard(move.move, side, gameboard);
     if (valid_move == "error") {
@@ -190,7 +222,9 @@ function oneRound() {
     }
 }
 
-state = oneRound();
+DOMHandling.clearBoard();
+DOMHandling.clickMove();
+//state = oneRound();
 
 
 //!Test (debug)
