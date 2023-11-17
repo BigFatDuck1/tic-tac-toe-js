@@ -173,13 +173,15 @@ const DOMHandling = (
         }
 
         //This function takes a click from the player and returns the coordinate that was clicked
-        function clickMove() {
+        function clickMove(one_round_function) {
             let tiles = document.querySelectorAll(".tile");
 
             tiles.forEach((element) => {
                 element.addEventListener("click", function() {
-                    //TODO: change here so this is equivalent to promptPlayer()
+                    //TODO: pass a oneRound() function here so it updates the board whenever a tile is pressed
                     let move = element.dataset.coord;
+                    console.log(move, current_player);
+                    //one_round_function(move);
                     return {move, current_player};
                 })
             })
@@ -190,11 +192,13 @@ const DOMHandling = (
 
 )();
 
+//For console version only
 function oneRound() {
     
     //Input must be in the form of a "coordinate" for a square i.e. 0-8
     // let move = gameFlow.promptPlayer(current_player); 
     let move = DOMHandling.clickMove();
+    console.log(move);
 
     let side = current_player == 1 ? "O" : "X";
     let valid_move = gameboardModule.updateBoard(move.move, side, gameboard);
@@ -224,7 +228,9 @@ function oneRound() {
 }
 
 DOMHandling.clearBoard();
-state = oneRound();
+//TODO: remove this later after debugging
+DOMHandling.clickMove();
+// state = oneRound();
 
 
 //!Test (debug)
