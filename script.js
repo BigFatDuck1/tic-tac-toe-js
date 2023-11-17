@@ -160,7 +160,7 @@ let gameboard;
 let state = "Neutral" //Win, Neutral, Draw
 let current_player = 1; //Start with Player 1 which is O;
 
-
+//4. DOMHandling IIFE
 const DOMHandling = (
     function() {
 
@@ -178,9 +178,9 @@ const DOMHandling = (
 
             tiles.forEach((element) => {
                 element.addEventListener("click", function() {
-                    
-                    let coordinate = element.dataset.coord;
-                    return coordinate;
+                    //TODO: change here so this is equivalent to promptPlayer()
+                    let move = element.dataset.coord;
+                    return {move, current_player};
                 })
             })
         }
@@ -193,7 +193,8 @@ const DOMHandling = (
 function oneRound() {
     
     //Input must be in the form of a "coordinate" for a square i.e. 0-8
-    let move = gameFlow.promptPlayer(current_player); 
+    // let move = gameFlow.promptPlayer(current_player); 
+    let move = DOMHandling.clickMove();
 
     let side = current_player == 1 ? "O" : "X";
     let valid_move = gameboardModule.updateBoard(move.move, side, gameboard);
@@ -223,8 +224,7 @@ function oneRound() {
 }
 
 DOMHandling.clearBoard();
-DOMHandling.clickMove();
-//state = oneRound();
+state = oneRound();
 
 
 //!Test (debug)
