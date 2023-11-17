@@ -1,9 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Passion+One:wght@400;700&display=swap');
 
+* {
+    font-family: "Passion One", sans-serif;
+}
 
 :root {
     /* Dimensions */
     --side: 10vh;
-
+    /* Font */
+    --font-size: 3rem;
     /* Colors */
     --primary-color: #2c3e50;
     --secondary-color: #ecf0f1;
@@ -24,4 +29,9 @@
     border: 1px solid black;
     width: var(--side);
     height: var(--side);
+    /* Center the content */
+    display: grid;
+    place-content: center;
+    font-size: var(--font-size);
+    font-weight: 700;
 }
