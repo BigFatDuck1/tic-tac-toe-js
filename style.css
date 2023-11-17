@@ -1,0 +1,27 @@
+
+
+:root {
+    /* Dimensions */
+    --side: 10vh;
+
+    /* Colors */
+    --primary-color: #2c3e50;
+    --secondary-color: #ecf0f1;
+    --tertiary-color: #3498db;
+    --quaternary-color: #e74c3c;
+    --quinary-color: #f1c40f;
+    --senary-color: #2ecc71;
+
+}
+
+.gameboard {
+    display: grid;
+    grid-template-columns: repeat(3, var(--side));
+    grid-template-rows: repeat(3, 1fr);
+}
+
+.tile {
+    border: 1px solid black;
+    width: var(--side);
+    height: var(--side);
+}
