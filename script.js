@@ -129,13 +129,21 @@ const gameFlow = (function () {
         return 3 - current_player;
     }
 
+    function incrementTurn() {
+        return nth_turn++;
+    }
+
+    function showTurnCount() {
+        return nth_turn;
+    }
+
     function promptPlayer(player) {
         let current_player = player;
         let move = prompt(`${player}'s move`);
         return {move, current_player};
     }
 
-    return {nextTurn, promptPlayer, nth_turn}
+    return {nextTurn, promptPlayer, incrementTurn, showTurnCount, nth_turn}
 
 })();
 
@@ -173,15 +181,16 @@ const DOMHandling = (
         }
 
         //This function takes a click from the player and returns the coordinate that was clicked
-        function clickMove(one_round_function) {
+        function clickMove(func) {
             let tiles = document.querySelectorAll(".tile");
+            let one_round_function = func; //The function that was passed as an argument is stored in a variable
 
             tiles.forEach((element) => {
                 element.addEventListener("click", function() {
-                    //TODO: pass a oneRound() function here so it updates the board whenever a tile is pressed
                     let move = element.dataset.coord;
                     console.log(move, current_player);
-                    //one_round_function(move);
+                    //TODO: pass a oneRound() function here so it updates the board whenever a tile is pressed
+                    one_round_function(move); //That stored function (from parameter) is called with an argument
                     return {move, current_player};
                 })
             })
@@ -193,11 +202,10 @@ const DOMHandling = (
 )();
 
 //For console version only
-function oneRound() {
+function oneRoundConsole() {
     
     //Input must be in the form of a "coordinate" for a square i.e. 0-8
-    // let move = gameFlow.promptPlayer(current_player); 
-    let move = DOMHandling.clickMove();
+    let move = gameFlow.promptPlayer(current_player); 
     console.log(move);
 
     let side = current_player == 1 ? "O" : "X";
@@ -227,9 +235,16 @@ function oneRound() {
     }
 }
 
+//For DOM version only
+function oneRoundDOM(move) { //Call this after player has clicked on a tile
+    gameboardModule.updateBoard(move, current_player, gameboard);
+    gameFlow.nth_turn++; //Increment turn
+    console.log(gameboard);
+}
+
 DOMHandling.clearBoard();
 //TODO: remove this later after debugging
-DOMHandling.clickMove();
+DOMHandling.clickMove(oneRoundDOM);
 // state = oneRound();
 
 
