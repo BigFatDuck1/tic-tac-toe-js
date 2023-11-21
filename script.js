@@ -237,7 +237,10 @@ function oneRoundConsole() {
 
 //For DOM version only
 function oneRoundDOM(move) { //Call this after player has clicked on a tile
-    gameboardModule.updateBoard(move, current_player, gameboard);
+    const tile_update = gameboardModule.updateBoard(move, current_player, gameboard);
+    if (tile_update == "error") {
+        return "error";
+    }
     gameFlow.nth_turn++; //Increment turn
     current_player = gameFlow.nextTurn(current_player);
     console.log(gameboard);
