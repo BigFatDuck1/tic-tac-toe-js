@@ -188,7 +188,7 @@ const DOMHandling = (
             tiles.forEach((element) => {
                 element.addEventListener("click", function() {
                     let move = element.dataset.coord;
-                    console.log(move, current_player);
+                    // console.log(move, current_player);
                     //TODO: pass a oneRound() function here so it updates the board whenever a tile is pressed
                     one_round_function(move); //That stored function (from parameter) is called with an argument
                     return {move, current_player};
@@ -239,6 +239,7 @@ function oneRoundConsole() {
 function oneRoundDOM(move) { //Call this after player has clicked on a tile
     gameboardModule.updateBoard(move, current_player, gameboard);
     gameFlow.nth_turn++; //Increment turn
+    current_player = gameFlow.nextTurn(current_player);
     console.log(gameboard);
 }
 
