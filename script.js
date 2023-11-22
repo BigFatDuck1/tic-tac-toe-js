@@ -57,9 +57,22 @@ let gameboardModule = (function() {
         let diagonal1 = [board[0], board[4], board[8]];
         let diagonal2 = [board[2], board[4], board[6]];
 
+        const coord_converted = {
+            4: 0,
+            9: 1,
+            2: 2,
+            3: 3,
+            5: 4,
+            7: 5,
+            8: 6,
+            1: 7,
+            6: 8, 
+        }
+
         let winner = { //Default state is lose i.e. no winner
             result: false,
             winner: "",
+            coordinates: [],
         }
 
         function checkSquares(set) {
@@ -68,7 +81,7 @@ let gameboardModule = (function() {
             let sum = 0;
             let characters = [];
             set.forEach(element => {
-                if (element[0] == "O" || element[0] == "X") {
+                if (element[0] == 1 || element[0] == 2) {
                     sum += element[1];
                     characters.push(element[0]);
                 }
@@ -80,10 +93,14 @@ let gameboardModule = (function() {
             
 
             //If win detected
-            if (sum == 15 && (characters == "O,O,O" || characters == "X,X,X")) {
+            if (sum == 15 && (characters == "1,1,1" || characters == "2,2,2")) {
                 //Only update if there is a winner
                 winner.result = true;
                 winner.winner = set[0][0];
+                winner.coordinates = [
+                coord_converted[set[0][1]], 
+                coord_converted[set[1][1]], 
+                coord_converted[set[2][1]]];
 
                 return winner;
                 
@@ -96,7 +113,7 @@ let gameboardModule = (function() {
             checkSquares(element);
         })
 
-        return winner; //No winner
+        return winner; //Default state is lose i.e. no winner
     }
 
     return {
@@ -244,14 +261,25 @@ let sound = new Audio("assets/sounds/capture.mp3");
 
 function oneRoundDOM(move) { //Call this after player has clicked on a tile
     const tile_update = gameboardModule.updateBoard(move, current_player, gameboard);
+    //Check for whether a move is possible or whether the tile is already filled
     if (tile_update == "error") {
         return "error";
     }
+    //Update the DOM (because so far only the "backend" has been updated)
     DOMHandling.fillTile(move);
     sound.play();
     gameFlow.nth_turn++; //Increment turn
-    current_player = gameFlow.nextTurn(current_player);
+    //Check if there is a winner
+    const result = gameboardModule.checkWin(gameboard);
+    //Debug
+    console.log(result);
     console.log(gameboard);
+    if (result.result == true) {
+        console.log(`Winner: ${result.winner}`);
+        return result;
+    }
+    //Change variable so it is the next player's turn
+    current_player = gameFlow.nextTurn(current_player);
 }
 
 DOMHandling.clearBoard();
