@@ -139,7 +139,7 @@ function createPlayer(name, order) {
 //Game order
 const gameFlow = (function () {
 
-    let nth_turn = 0;
+    let nth_turn = 1; //Start with 1st turn
 
     function nextTurn(current_player) {
         //gameFlow.whoseTurn returns the opposite of the current player
@@ -182,7 +182,6 @@ let gameboard;
 
 
 //3. Function for one round with checking for win condition
-let state = "Neutral" //Win, Neutral, Draw
 let current_player = 1; //Start with Player 1 which is O;
 
 //4. DOMHandling IIFE
@@ -244,16 +243,20 @@ function oneRoundDOM(move) { //Call this after player has clicked on a tile
     //Update the DOM (because so far only the "backend" has been updated)
     DOMHandling.fillTile(move);
     sound.play();
-    gameFlow.nth_turn++; //Increment turn
+    let turn = gameFlow.incrementTurn(); //Increment turn
+
     //Check if there is a winner
     const result = gameboardModule.checkWin(gameboard);
-    //Debug
-    console.log(result);
-    console.log(gameboard);
     //If there is a winner:
     if (result.result == true) {
         console.log(`Winner: ${result.winner}`);
         DOMHandling.gameEnd();
+        return result;
+    }
+    //Check for draw
+    if (turn == 9) {
+        result.winner = "Draw";
+        console.log(result.winner);
         return result;
     }
     //Change variable so it is the next player's turn
@@ -310,8 +313,7 @@ function oneRoundConsole() {
             oneRound();
         }
         else if (gameFlow.nth_turn == 9) { //Draw
-            state = "Draw";
-            result.winner = state;
+            result.winner = "Draw";
             console.log(winner);
             return winner;
         }
@@ -322,4 +324,4 @@ function oneRoundConsole() {
     }
 }
 
-// state = oneRound();
+// oneRound()
