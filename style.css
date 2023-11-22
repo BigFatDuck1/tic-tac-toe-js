@@ -21,11 +21,14 @@
 
 body {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
 
 .gameboard {
     display: grid;
+    padding-top: 10vh;
     grid-template-columns: repeat(3, var(--side));
     grid-template-rows: repeat(3, 1fr);
 }
@@ -39,4 +42,9 @@ body {
     place-content: center;
     font-size: var(--font-size);
     font-weight: 700;
+}
+
+.result {
+    padding-top: 10vh;
+    font-size: 3rem;
 }

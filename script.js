@@ -187,7 +187,6 @@ let current_player = 1; //Start with Player 1 which is O;
 //4. DOMHandling IIFE
 const DOMHandling = (
     function() {
-
         
         function clearBoard() {
             let tiles = document.querySelectorAll(".tile");
@@ -226,7 +225,19 @@ const DOMHandling = (
             });
         }
 
-        return { clearBoard, clickMove, fillTile, gameEnd }
+        function updateResult(result) {
+            if (result.winner == "") {
+                return "No results yet"
+            }
+            else if (result.winner == "Draw") {
+                document.querySelector(".result").textContent = "Draw";
+            }
+            else {
+                document.querySelector(".result").textContent = `Winner: Player ${result.winner}`;
+            }
+        }
+
+        return { clearBoard, clickMove, fillTile, gameEnd, updateResult }
     }
 
 )();
@@ -247,6 +258,7 @@ function oneRoundDOM(move) { //Call this after player has clicked on a tile
 
     //Check if there is a winner
     const result = gameboardModule.checkWin(gameboard);
+    DOMHandling.updateResult(result);
     //If there is a winner:
     if (result.result == true) {
         console.log(`Winner: ${result.winner}`);
