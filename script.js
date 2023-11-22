@@ -49,6 +49,12 @@ let gameboardModule = (function() {
         console.log(board);
     }
 
+    function purgeBoard(board) {
+        for (let i = 0; i < board.length; i++) {
+            board[i][0] = "";
+        }
+    }
+
     function checkWin(board) { //Check for X or O?
         //Whenever a move has been made, call this function
         let row1 = [board[0], board[1], board[2]];
@@ -122,6 +128,7 @@ let gameboardModule = (function() {
     return {
             makeBoard, 
             logBoard, 
+            purgeBoard,
             appendThirdOrderSquare, 
             setDimensions, 
             updateBoard, 
@@ -242,7 +249,11 @@ const DOMHandling = (
             }
         }
 
-        return { clearBoard, clickMove, fillTile, gameEnd, updateResult }
+        function clearWinner() {
+            document.querySelector(".result").textContent = "";
+        }
+
+        return { clearBoard, clickMove, fillTile, gameEnd, updateResult, clearWinner }
     }
 
 )();
@@ -280,8 +291,17 @@ function oneRoundDOM(move) { //Call this after player has clicked on a tile
 }
 
 //Game flow
-DOMHandling.clearBoard();
-DOMHandling.clickMove(oneRoundDOM);
+function restartGame() {
+    gameboardModule.purgeBoard(gameboard);
+    DOMHandling.clearBoard();
+    DOMHandling.clickMove(oneRoundDOM);
+    DOMHandling.clearWinner();
+}
+restartGame();
+
+document.querySelector("#restart_button").addEventListener("click", () => {
+    restartGame();
+})
 
 //Restart game
 
