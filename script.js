@@ -198,17 +198,17 @@ const DOMHandling = (
         }
 
         //This function takes a click from the player and returns the coordinate that was clicked
+
         function clickMove(func) {
             let tiles = document.querySelectorAll(".tile");
             let one_round_function = func; //The function that was passed as an argument is stored in a variable
 
             tiles.forEach((element) => {
-                element.addEventListener("click", function() {
+                element.addEventListener("click", function inputMove() {
                     let move = element.dataset.coord;
-                    // console.log(move, current_player);
-                    //TODO: pass a oneRound() function here so it updates the board whenever a tile is pressed
                     one_round_function(move); //That stored function (from parameter) is called with an argument
                     return {move, current_player};
+                    //current_player variable is bad practice because it is something that exists in the global scope
                 })
             })
         }
@@ -217,11 +217,77 @@ const DOMHandling = (
             document.querySelector(`[data-coord="${move}"]`).textContent = current_player == 1 ? "O" : "X";
         }
 
-        return { clearBoard, clickMove, fillTile }
+        function gameEnd() {
+            let tiles = document.querySelectorAll(".tile");
+
+            tiles.forEach((element) => {
+                //Clone node only clones the node but not any of its event listeners
+                element.replaceWith(element.cloneNode(true));
+                
+            });
+        }
+
+        return { clearBoard, clickMove, fillTile, gameEnd }
     }
 
 )();
 
+//For DOM version only
+let sound = new Audio("assets/sounds/capture.mp3");
+
+function oneRoundDOM(move) { //Call this after player has clicked on a tile
+    const tile_update = gameboardModule.updateBoard(move, current_player, gameboard);
+    //Check for whether a move is possible or whether the tile is already filled
+    if (tile_update == "error") {
+        return "error";
+    }
+    //Update the DOM (because so far only the "backend" has been updated)
+    DOMHandling.fillTile(move);
+    sound.play();
+    gameFlow.nth_turn++; //Increment turn
+    //Check if there is a winner
+    const result = gameboardModule.checkWin(gameboard);
+    //Debug
+    console.log(result);
+    console.log(gameboard);
+    //If there is a winner:
+    if (result.result == true) {
+        console.log(`Winner: ${result.winner}`);
+        DOMHandling.gameEnd();
+        return result;
+    }
+    //Change variable so it is the next player's turn
+    current_player = gameFlow.nextTurn(current_player);
+}
+
+//Game flow
+DOMHandling.clearBoard();
+DOMHandling.clickMove(oneRoundDOM);
+
+//Restart game
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// _______________________
 //For console version only
 function oneRoundConsole() {
     
@@ -256,42 +322,4 @@ function oneRoundConsole() {
     }
 }
 
-//For DOM version only
-let sound = new Audio("assets/sounds/capture.mp3");
-
-function oneRoundDOM(move) { //Call this after player has clicked on a tile
-    const tile_update = gameboardModule.updateBoard(move, current_player, gameboard);
-    //Check for whether a move is possible or whether the tile is already filled
-    if (tile_update == "error") {
-        return "error";
-    }
-    //Update the DOM (because so far only the "backend" has been updated)
-    DOMHandling.fillTile(move);
-    sound.play();
-    gameFlow.nth_turn++; //Increment turn
-    //Check if there is a winner
-    const result = gameboardModule.checkWin(gameboard);
-    //Debug
-    console.log(result);
-    console.log(gameboard);
-    if (result.result == true) {
-        console.log(`Winner: ${result.winner}`);
-        return result;
-    }
-    //Change variable so it is the next player's turn
-    current_player = gameFlow.nextTurn(current_player);
-}
-
-DOMHandling.clearBoard();
-DOMHandling.clickMove(oneRoundDOM);
-
-
-
-
 // state = oneRound();
-
-//!Test (debug)
-// gameboardModule.updateBoard(1, "X", gameboard);
-// gameboardModule.updateBoard(4, "X", gameboard);
-// gameboardModule.updateBoard(7, "X", gameboard);
-// console.log(gameboardModule.checkWin(gameboard));
