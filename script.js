@@ -240,22 +240,27 @@ function oneRoundConsole() {
 }
 
 //For DOM version only
+let sound = new Audio("assets/sounds/capture.mp3");
+
 function oneRoundDOM(move) { //Call this after player has clicked on a tile
     const tile_update = gameboardModule.updateBoard(move, current_player, gameboard);
     if (tile_update == "error") {
         return "error";
     }
     DOMHandling.fillTile(move);
+    sound.play();
     gameFlow.nth_turn++; //Increment turn
     current_player = gameFlow.nextTurn(current_player);
     console.log(gameboard);
 }
 
 DOMHandling.clearBoard();
-//TODO: remove this later after debugging
 DOMHandling.clickMove(oneRoundDOM);
-// state = oneRound();
 
+
+
+
+// state = oneRound();
 
 //!Test (debug)
 // gameboardModule.updateBoard(1, "X", gameboard);
