@@ -1,3 +1,6 @@
+//Skin for X and O
+const O = "O"; //Player 1
+const X = "X"; //Player 2
 
 //Gameboard related functions (create, update, checkWin)
 let gameboardModule = (function() {
@@ -212,7 +215,7 @@ const DOMHandling = (
         }
 
         function fillTile(move) {
-            document.querySelector(`[data-coord="${move}"]`).textContent = current_player == 1 ? "O" : "X";
+            document.querySelector(`[data-coord="${move}"]`).textContent = current_player == 1 ? `${O}` : `${X}`;
         }
 
         function gameEnd() {
