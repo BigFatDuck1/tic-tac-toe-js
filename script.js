@@ -227,13 +227,15 @@ const DOMHandling = (
 
         function updateResult(result) {
             if (result.winner == "") {
-                return "No results yet"
+                return "No results yet";
             }
             else if (result.winner == "Draw") {
                 document.querySelector(".result").textContent = "Draw";
+                return "Draw";
             }
             else {
                 document.querySelector(".result").textContent = `Winner: Player ${result.winner}`;
+                return result;
             }
         }
 
@@ -258,17 +260,16 @@ function oneRoundDOM(move) { //Call this after player has clicked on a tile
 
     //Check if there is a winner
     const result = gameboardModule.checkWin(gameboard);
+    //Check for draw
+    if (turn == 9) {
+        result.winner = "Draw";
+        console.log(result.winner);
+    }
     DOMHandling.updateResult(result);
     //If there is a winner:
     if (result.result == true) {
         console.log(`Winner: ${result.winner}`);
         DOMHandling.gameEnd();
-        return result;
-    }
-    //Check for draw
-    if (turn == 9) {
-        result.winner = "Draw";
-        console.log(result.winner);
         return result;
     }
     //Change variable so it is the next player's turn
