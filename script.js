@@ -196,7 +196,11 @@ const DOMHandling = (
             })
         }
 
-        return { clearBoard, clickMove }
+        function fillTile(move) {
+            document.querySelector(`[data-coord="${move}"]`).textContent = current_player == 1 ? "O" : "X";
+        }
+
+        return { clearBoard, clickMove, fillTile }
     }
 
 )();
@@ -241,6 +245,7 @@ function oneRoundDOM(move) { //Call this after player has clicked on a tile
     if (tile_update == "error") {
         return "error";
     }
+    DOMHandling.fillTile(move);
     gameFlow.nth_turn++; //Increment turn
     current_player = gameFlow.nextTurn(current_player);
     console.log(gameboard);
